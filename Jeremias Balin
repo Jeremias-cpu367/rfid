@@ -1,0 +1,124 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { Heart, Sparkles } from "lucide-react";
+import Image from "next/image";
+
+const questions = [
+  {
+    question: "Quando ci siamo presentati?",
+    options: ["10/12", "18/12", "12/12", "8/12"],
+    correct: "10/12",
+  },
+  {
+    question: "Quando ti ho scritto per prima volta per uscire?",
+    options: ["15/12", "23/12", "22/12", "20/12"],
+    correct: "22/12",
+  },
+  {
+    question: "Quando mi hai rifiutato il nostro primo bacio?",
+    options: ["30/12", "28/12", "29/12", "1/1"],
+    correct: "28/12",
+  },
+  {
+    question: "Di quali sapori eravano le empanadas che abbiamo preso quella volta là?",
+    options: [
+      "carne, formaggio, tonno e pollo",
+      "carne, verdura, cipolla e pollo",
+      "formaggio, carne, verdura e tonno",
+      "pollo, verdura, tonno e carne",
+    ],
+    correct: "carne, formaggio, tonno e pollo",
+  },
+  {
+    question: "Cosa ti ho detto quando abbiamo visto a Babbo Natale in quel bar alla vigilia?",
+    options: [
+      "come si chiama questo da voi?",
+      "cosa gli hai chiesto per natale?",
+      "io ho chiesto non andarmene mai da qui",
+      "forse ti è passato a prendere in caso qualcuno gli abbia chiesto te",
+    ],
+    correct: "io ho chiesto non andarmene mai da qui",
+  },
+];
+
+export default function QuizConcy() {
+  const [step, setStep] = useState(0);
+  const [score, setScore] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+
+  const handleAnswer = (option: string) => {
+    if (option === questions[step].correct) {
+      setScore(score + 1);
+    }
+    if (step + 1 < questions.length) {
+      setStep(step + 1);
+    } else {
+      setShowResult(true);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-pink-100 flex flex-col items-center justify-center p-4">
+      <motion.h1
+        className="text-3xl font-bold text-center text-pink-700 mb-6"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        Quiz per Concy ♥️
+      </motion.h1>
+
+      {!showResult ? (
+        <Card className="w-full max-w-md bg-pink-200 shadow-xl rounded-2xl p-4">
+          <CardContent>
+            <h2 className="text-lg font-semibold text-pink-800 mb-4">
+              {questions[step].question}
+            </h2>
+            <div className="grid gap-2">
+              {questions[step].options.map((opt, idx) => (
+                <Button
+                  key={idx}
+                  onClick={() => handleAnswer(opt)}
+                  className="bg-pink-400 hover:bg-pink-500 text-white rounded-xl"
+                >
+                  {opt}
+                </Button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <motion.div
+          className="text-center text-pink-800"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+        >
+          <Sparkles className="w-12 h-12 mx-auto text-pink-500" />
+          <h2 className="text-2xl font-bold mt-4">Felici 5 mesi Concy!</h2>
+          <p className="mt-2 text-lg">
+            Grazie per essere l'amore della mia vita 💖
+          </p>
+          <p className="mt-4 text-xl font-semibold">Hai ottenuto {score} su {questions.length} punti!</p>
+          <Heart className="w-10 h-10 mx-auto mt-4 text-red-500 animate-bounce" />
+
+          <div className="mt-6">
+            <Image
+              src="/mnt/data/Imagen%20de%20WhatsApp%202025-03-14%20a%20las%2011.08.15_44a2d704.jpg"
+              alt="Concy e amore"
+              width={300}
+              height={400}
+              className="rounded-2xl mx-auto"
+            />
+            <p className="mt-4 text-lg font-bold text-pink-700">Brava amore, tieni un bacino 🥹🥰</p>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Audio de fondo (se recomienda subir un archivo MP3 a un servidor propio o usar un link directo válido) */}
+      <audio autoPlay loop>
+        <source src="/audio/musica-romantica.mp3" type="audio/mpeg" />
+      </audio>
+    </div>
+  );
+}
